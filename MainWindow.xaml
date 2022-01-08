@@ -1,0 +1,187 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProiectWPF"
+        xmlns:BazaDateModel="clr-namespace:BazaDateModel;assembly=BazaDateModel" x:Class="ProiectWPF.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="318.68" Width="692" Loaded="Window_Loaded">
+    <Window.Resources>
+        <CollectionViewSource x:Key="customerViewSource" d:DesignSource="{d:DesignInstance {x:Type BazaDateModel:Customer}, CreateList=True}"/>
+        <CollectionViewSource x:Key="movieViewSource" d:DesignSource="{d:DesignInstance {x:Type BazaDateModel:Movie}, CreateList=True}"/>
+        <CollectionViewSource x:Key="reservationsViewSource" Source="{Binding Reservations, Source={StaticResource movieViewSource}}"/>
+        <ControlTemplate x:Key="validationTemplate">
+            <DockPanel>
+                <TextBlock Foreground="Blue" FontSize="20">!</TextBlock>
+                <AdornedElementPlaceholder/>
+            </DockPanel>
+        </ControlTemplate>
+        <Style x:Key="textBoxInError" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)/ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="0,0,-0.4,0.4">
+        <TabControl x:Name="tbCtrl" HorizontalAlignment="Left" Height="277" Margin="10,10,0,0" VerticalAlignment="Top" Width="668" RenderTransformOrigin="0.488,0.496">
+            <TabItem Header="Movies">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource movieViewSource}" Margin="0,-2,-0.6,-1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="103*"/>
+                        <ColumnDefinition Width="560*"/>
+                    </Grid.ColumnDefinitions>
+                    <DataGrid x:Name="movieDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="130.8,10,10.2,98.8" RowDetailsVisibilityMode="VisibleWhenSelected"  Grid.Column="1">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="movieIdColumn" Binding="{Binding MovieId}" Header="Movie Id" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="titleColumn" Binding="{Binding Title}" Header="Movie Title" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="durationColumn" Binding="{Binding Duration}" Header="Duration" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="genreColumn" Binding="{Binding Genre}" Header="Movie Genre" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="languageColumn" Binding="{Binding Language}" Header="Language" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="ratingColumn" Binding="{Binding Rating}" Header="Rating" Width="SizeToHeader"/>
+                            <DataGridTemplateColumn x:Name="releaseDateColumn" Header="Release Date" Width="SizeToHeader">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <DatePicker SelectedDate="{Binding ReleaseDate, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Grid x:Name="grid2" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="235" Width="219" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Title:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="1" VerticalAlignment="Center"/>
+                        <TextBox x:Name="titleTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="1" Text="{Binding Title, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="Duration:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="2" VerticalAlignment="Center"/>
+                        <TextBox x:Name="durationTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="2" Text="{Binding Duration, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="Genre:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="3" VerticalAlignment="Center"/>
+                        <TextBox x:Name="genreTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="3" Text="{Binding Genre, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="Language:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="4" VerticalAlignment="Center"/>
+                        <TextBox x:Name="languageTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="4" Text="{Binding Language, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="Movie Id:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="0" VerticalAlignment="Center"/>
+                        <TextBox x:Name="movieIdTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="0" Text="{Binding MovieId, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120" IsEnabled="False"/>
+                        <Label Content="Rating:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="5" VerticalAlignment="Center"/>
+                        <TextBox x:Name="ratingTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="3" Grid.Row="5" Text="{Binding Rating, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120"/>
+                        <Label Content="Release Date:" Grid.Column="0" HorizontalAlignment="Left" Margin="3" Grid.Row="6" VerticalAlignment="Center"/>
+                        <DatePicker x:Name="releaseDateDatePicker" Grid.Column="1" HorizontalAlignment="Left" Margin="3" Grid.Row="6" SelectedDate="{Binding ReleaseDate, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center"/>
+
+                    </Grid>
+                    <Button x:Name="btnPrevMovies" Content="Previous" HorizontalAlignment="Left" Margin="364.8,158,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1" Click="btnPrevMovies_Click"/>
+                    <Button x:Name="btnNextMovies" Content="Next" HorizontalAlignment="Left" Margin="444.8,158,0,0" VerticalAlignment="Top" Width="75" Grid.Column="1" Click="btnNextMovies_Click"/>
+                    <Button Content="Upcoming Movies" HorizontalAlignment="Left" Margin="390.8,202,0,0" VerticalAlignment="Top" Width="105" Click="Button_Click" Grid.Column="1"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Customers">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource customerViewSource}" Margin="0,0,-0.2,0">
+                    <DataGrid x:Name="customerDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="231,10,10.6,97.8" RowDetailsVisibilityMode="VisibleWhenSelected">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="custIdColumn" Binding="{Binding CustId}" Header="Cust Id" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="firstNameColumn" Binding="{Binding FirstName}" Header="First Name" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="lastNameColumn" Binding="{Binding LastName}" Header="Last Name" Width="SizeToHeader"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Grid x:Name="grid1" HorizontalAlignment="Left" Margin="10,55,0,0" VerticalAlignment="Top" Width="216">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="102.4"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Content="Cust Id:" Grid.Column="0" HorizontalAlignment="Left" Margin="3,4,0,2" Grid.Row="0" VerticalAlignment="Center"/>
+                        <TextBox x:Name="custIdTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="3.4,4,0,4" Grid.Row="0" Text="{Binding CustId, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120" Grid.ColumnSpan="3" IsEnabled="False"/>
+                        <Label Content="First Name:" Grid.Column="0" HorizontalAlignment="Left" Margin="3,3,0,3" Grid.Row="1" VerticalAlignment="Center"/>
+                        <TextBox x:Name="firstNameTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="3.4,4,0,4" Grid.Row="1" Text="{Binding FirstName, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120" Grid.ColumnSpan="3" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}" />
+                        <Label Content="Last Name:" Grid.Column="0" HorizontalAlignment="Left" Margin="3,3,0,3" Grid.Row="2" VerticalAlignment="Center"/>
+                        <TextBox x:Name="lastNameTextBox" Grid.Column="1" HorizontalAlignment="Left" Height="24" Margin="3.4,4,0,4" Grid.Row="2" Text="{Binding LastName, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}" VerticalAlignment="Center" Width="120" Grid.ColumnSpan="3" Validation.ErrorTemplate="{StaticResource validationTemplate}" Style="{StaticResource textBoxInError}"/>
+                    </Grid>
+                    <Button x:Name="btnPrevCustomers" Content="Previous" HorizontalAlignment="Left" Margin="472,156,0,0" VerticalAlignment="Top" Width="75" Click="btnPrevCustomers_Click"/>
+                    <Button x:Name="btnNextCustomers" Content="Next" HorizontalAlignment="Left" Margin="552,156,0,0" VerticalAlignment="Top" Width="75" Click="btnNextCustomers_Click"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Reservations">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource reservationsViewSource}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="64*"/>
+                        <ColumnDefinition Width="599*"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox x:Name="cmbCustomers" HorizontalAlignment="Left" Margin="63,41,0,0" VerticalAlignment="Top" Width="120" SelectedValue="{Binding ElementName=reservationsDataGrid,Path=SelectedItem.CustId,Mode=OneWay}" Grid.ColumnSpan="2">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} - {1}">
+                                            <Binding Path="FirstName"/>
+                                            <Binding Path="LastName"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox x:Name="cmbMovies" HorizontalAlignment="Left" Margin="63,145,0,0" VerticalAlignment="Top" Width="120" SelectedValue="{Binding ElementName=reservationsDataGrid,Path=SelectedItem.MovieId,Mode=OneWay}" Grid.ColumnSpan="2">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} - {1}">
+                                            <Binding Path="Title"/>
+                                            <Binding Path="Genre"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <DataGrid x:Name="reservationsDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="170,10,10.4,100.8" RowDetailsVisibilityMode="VisibleWhenSelected" IsSynchronizedWithCurrentItem="True" Grid.Column="1">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="FirstNameColumn" Binding="{Binding FirstName}" Header="First Name" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="LastNameColumn" Binding="{Binding LastName}" Header="Last Name" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="TitleColumn" Binding="{Binding Title}" Header="Movie Title" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="GenreColumn" Binding="{Binding Genre}" Header="Movie Genre" Width="SizeToHeader"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label Content="Customers" HorizontalAlignment="Left" Margin="26.4,10,0,0" VerticalAlignment="Top" Width="73" Grid.Column="1"/>
+                    <Label Content="Movies" HorizontalAlignment="Left" Margin="37.4,114,0,0" VerticalAlignment="Top" Width="52" Grid.Column="1"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <GroupBox x:Name="gbOperations" Button.Click="gbOperations_Click" HorizontalAlignment="Left" Margin="246,192,0,0" VerticalAlignment="Top" Width="95" Height="73">
+            <StackPanel Margin="0,0,-2,3.8" >
+                <Button x:Name="btnAdd" Content="New" HorizontalAlignment="Center" VerticalAlignment="Top" Width="75" Click="btnAdd_Click"/>
+                <Button x:Name="btnEdit" Content="Edit" HorizontalAlignment="Center" VerticalAlignment="Top" Width="75" Margin="0,0,-0.4,0" Click="btnEdit_Click"/>
+                <Button x:Name="btnDelete" Content="Delete" HorizontalAlignment="Center" VerticalAlignment="Top" Width="75" Margin="0,0,-0.4,0" Click="btnDelete_Click"/>
+
+
+            </StackPanel>
+        </GroupBox>
+        <GroupBox x:Name="gbActions" HorizontalAlignment="Left" Margin="346,192,0,0" VerticalAlignment="Top" Width="87" Height="73">
+            <StackPanel >
+                <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Center" VerticalAlignment="Top" Width="75" Click="btnSave_Click"/>
+                <Button x:Name="btnCancel" Content="Cancel" HorizontalAlignment="Center" VerticalAlignment="Top" Width="75" Click="btnCancel_Click"/>
+
+            </StackPanel>
+        </GroupBox>
+
+
+    </Grid>
+</Window>
